@@ -197,23 +197,28 @@ def download_data(ticker):
     Download BTC/ETH/BNB data with fallback handling for BTC-USD issues on Streamlit Cloud.
     """
 
-    # 1️⃣ Try normal Yahoo Finance fetch
+    # 1️⃣ Coba normal Yahoo Finance (tanggal EXACT DARI KAMU)
     try:
-        df = yf.download(ticker, period="max", interval="1d")
+        df = yf.download(
+            ticker,
+            start="2020-12-01",
+            end="2025-12-01",
+            interval="1d"
+        )
         if not df.empty:
             return df
     except:
         pass
 
-    # 2️⃣ Retry with date range fallback
+    # 2️⃣ Coba fallback Yahoo Finance lain
     try:
-        df = yf.download(ticker, start="2020-12-01", interval="1d")
+        df = yf.download(ticker, period="5y", interval="1d")
         if not df.empty:
             return df
     except:
         pass
 
-    # 3️⃣ Special fallback for BTC (BINANCE API)
+    # 3️⃣ Special fallback untuk BTC pakai Binance API
     if ticker.upper() == "BTC-USD":
         try:
             url = "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1d"
@@ -224,7 +229,6 @@ def download_data(ticker):
                 "Taker Buy Base", "Taker Buy Quote", "Ignore"
             ])
 
-            # Format to match Yahoo Finance output
             df["Date"] = pd.to_datetime(df["Open Time"], unit="ms")
             df.set_index("Date", inplace=True)
             df = df[["Open", "High", "Low", "Close", "Volume"]].astype(float)
@@ -232,7 +236,7 @@ def download_data(ticker):
         except:
             pass
 
-    # 4️⃣ If everything fails → return empty df (so UI won't crash)
+    # 4️⃣ Jika semuanya gagal, kembaliin empty DataFrame
     return pd.DataFrame()
 
 
@@ -1408,5 +1412,6 @@ elif page == 'Comparison':
 # ============================================================
 
 st.markdown("</div>", unsafe_allow_html=True)
+
 
 
