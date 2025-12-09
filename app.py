@@ -498,6 +498,10 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+import streamlit as st
+import tensorflow as tf
+st.write("TF VERSION:", tf.__version__)
+
 # ============================================
 # PAGE: HOME
 # (unchanged content — omitted for brevity in comments but kept)
@@ -1366,4 +1370,5 @@ elif page == 'Comparison':
 # ============================================================
 # CLOSE MAIN CARD
 # ============================================================
+
 st.markdown("</div>", unsafe_allow_html=True)
